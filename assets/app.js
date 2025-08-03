@@ -17,8 +17,8 @@ function showLoader(show=true){
    クイズ画面
 ------------------------------------------------------------ */
 async function runQuiz(){
+  showLoader(true);
   try{
-    showLoader(true);
     const res  = await fetch(`${GAS_ENDPOINT}?action=getQuiz`);
     const data = await res.json();
     renderQuestions(data.questions,data.choices);
@@ -35,15 +35,18 @@ function renderQuestions(qs, choices){
   const answered  = {};
 
   btnFinish.onclick = () => {
-    showLoader(true);                         // ← 即ローダー表示
+    showLoader(true);                   // 即ローダー
     submitLog(answered).then(()=>location.href='result.html');
   };
 
   const updateBar = () => {
     const cnt = Object.keys(answered).length;
     document.getElementById('progressBar').style.width = `${(cnt/qs.length)*100}%`;
-    if(cnt === qs.length){                   // 全回答済み
+    // 完了判定
+    if(cnt === qs.length){
       btnFinish.classList.remove('hidden');
+    }else{
+      btnFinish.classList.add('hidden');
     }
   };
 
@@ -85,29 +88,37 @@ async function showResult(){
   form.append('action','getResult');
   form.append('answers',JSON.stringify(answers));
 
+  showLoader(true);
   try{
-    showLoader(true);
     const res  = await fetch(GAS_ENDPOINT,{method:'POST',body:form});
     const data = await res.json();
 
-    /* タイトル固定＋説明文 */
-    document.getElementById('resultTitle').nextElementSibling?.remove();
-    document.getElementById('resultTitle').insertAdjacentHTML(
-      'afterend',
-      `<p class="title-center" style="margin-top:.6rem;font-size:1rem;">
-         診断の結果、あなたのタイプは<strong>「${data.type}」</strong>でした
-       </p>`
-    );
+    /* 1) タイプ表示 */
+    const header = document.getElementById('resultTitle');
+    header.nextElementSibling?.remove();
+    const p = document.createElement('p');
+    p.className = 'title-center fade-item';
+    p.style.animationDelay = '.2s';
+    p.innerHTML = `診断の結果、あなたのタイプは<strong>「${data.type}」</strong>でした`;
+    header.insertAdjacentElement('afterend', p);
 
+    /* 2) メニューカード */
     const list = document.getElementById('menuList');
     list.innerHTML='';
-    data.menus.forEach(m=>{
+    data.menus.forEach((m,i)=>{
+      const delay = .6 + i*0.3;               // 2 番目に順次
       list.insertAdjacentHTML('beforeend',
-        `<div class="card">
+        `<div class="card fade-item" style="animation-delay:${delay}s">
            ${m.img?`<img src="${m.img}" alt="${m.name}" style="width:100%;border-radius:1rem;">`:''}
            <h2 style="margin:1rem 0 .5rem">${m.name}</h2>
          </div>`);
     });
+
+    /* 3) ホームへ戻るボタン */
+    const navBtn = document.querySelector('nav.bottom-pad');
+    navBtn.classList.add('fade-item');
+    navBtn.style.animationDelay = (.6 + data.menus.length*0.3 + .3) + 's';
+
   }catch(e){
     alert('結果取得に失敗しました');console.error(e);
   }finally{
@@ -116,12 +127,12 @@ async function showResult(){
 }
 
 /* ------------------------------------------------------------
-   回答ログ送信
+   ログ送信
 ------------------------------------------------------------ */
 async function submitLog(obj){
   const form = new URLSearchParams();
   form.append('action','log');
   form.append('answers',JSON.stringify(obj));
-  try{ await fetch(GAS_ENDPOINT,{method:'POST',body:form}); }
-  catch(e){ console.warn('log failed',e); }
+  try{await fetch(GAS_ENDPOINT,{method:'POST',body:form});}
+  catch(e){console.warn('log failed',e);}
 }
