@@ -55,29 +55,49 @@ function renderQuestions(qs, choicesMap) {
   });
 }
 
-/* --------- 結果画面 --------- */
+/* ===== 結果画面 ===== */
 async function showResult() {
-  const answers = JSON.parse(localStorage.getItem('answers') || '{}');
-  if (!Object.keys(answers).length) { location.href = 'index.html'; return; }
+  // 1) 回答を取得。無ければトップへリダイレクト
+  const answersStr = localStorage.getItem('answers');
+  if (!answersStr) {
+    window.location.href = 'index.html';
+    return;
+  }
+  const answers = JSON.parse(answersStr);
 
-  const res = await fetch(`${GAS_ENDPOINT}?action=getResult`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ answers })
-  });
-  const data = await res.json();               // { type:'◯◯タイプ', menus:[{name,img}] }
+  // 2) フォームエンコードで POST → プリフライト (OPTIONS) を回避
+  const form = new URLSearchParams();
+  form.append('action', 'getResult');
+  form.append('answers', JSON.stringify(answers));
 
-  document.getElementById('resultTitle').textContent = data.type;
+  try {
+    const res = await fetch(GAS_ENDPOINT, {
+      method: 'POST',
+      body: form           // ← Content-Type は自動で application/x-www-form-urlencoded
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
-  const list = document.getElementById('menuList');
-  data.menus.forEach(m => {
-    const card = document.createElement('div');
-    card.className = 'card';
-    card.innerHTML = `
-      ${m.img ? `<img src="${m.img}" alt="${m.name}" style="width:100%;border-radius:1rem;">` : ''}
-      <h2 style="margin:1rem 0 0.5rem;">${m.name}</h2>`;
-    list.appendChild(card);
-  });
+    const data = await res.json();   // { type:'◯◯型', menus:[{name,img},…] }
+
+    /* 3) 画面に反映 */
+    document.getElementById('resultTitle').textContent = data.type;
+
+    const list = document.getElementById('menuList');
+    list.innerHTML = '';             // 念のためクリア
+    data.menus.forEach(m => {
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.innerHTML = `
+        ${m.img ? `<img src="${m.img}" alt="${m.name}" style="width:100%;border-radius:1rem;">` : ''}
+        <h2 style="margin:1rem 0 .5rem;">${m.name}</h2>
+      `;
+      list.appendChild(card);
+    });
+
+  } catch (err) {
+    console.error('showResult error:', err);
+    alert('結果の取得に失敗しました。時間をおいて再度お試しください。');
+  }
 }
 
 /* --------- ログ送信 --------- */
