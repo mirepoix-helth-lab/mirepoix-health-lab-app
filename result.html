@@ -6,16 +6,19 @@
   <title>診断結果</title>
   <link rel="stylesheet" href="assets/style.css" />
 </head>
-<body class="screen fade-in">
+<body class="screen">
   <header class="mini-header">
-    <h1 id="resultTitle">診断結果</h1>
+    <h1 id="resultTitle" class="title-center">診断結果</h1>
   </header>
 
   <main id="menuList"></main>
 
   <nav class="centered">
-    <a href="index.html" class="btn secondary fade">もう一度診断</a>
+    <a href="index.html" class="btn secondary fade">ホームへ戻る</a>
   </nav>
+
+  <!-- ローダー -->
+  <div id="loader" class="hidden"><div class="spinner"></div></div>
 
   <script type="module" src="assets/app.js"></script>
 </body>
