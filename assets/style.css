@@ -56,13 +56,13 @@ body{
   margin:0;
 }
 
-/* ★ 見出しを少し小さくする */
+/* ★ 見出しサイズをスマホで小さく */
 .mini-header .title-center{
-  font-size:1.4rem;
+  font-size:1.2rem;   /* スマホ・タブレット */
 }
 @media (min-width:720px){
   .mini-header .title-center{
-    font-size:1.6rem;
+    font-size:1.6rem; /* PC */
   }
 }
 
