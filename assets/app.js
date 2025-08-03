@@ -1,5 +1,5 @@
 // === 共通設定 ===
-const GAS_ENDPOINT = 'hhttps://script.google.com/macros/s/AKfycbyHeY6tH9r7-UIlMUdWFDlos7OmQdW-6mcnBe4yaFnoFPvJB6XcFdttMj2-IlWM65ucrw/exec'; // デプロイ後のURLに置換
+const GAS_ENDPOINT = 'https://script.google.com/macros/s/AKfycbyHeY6tH9r7-UIlMUdWFDlos7OmQdW-6mcnBe4yaFnoFPvJB6XcFdttMj2-IlWM65ucrw/exec'; // デプロイ後のURLに置換
 
 /* ===== Index / Quiz / Result 判定 ===== */
 const page = document.body?.id || document.location.pathname.split('/').pop();
