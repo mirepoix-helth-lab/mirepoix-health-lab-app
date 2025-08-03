@@ -7,26 +7,34 @@ body{background:#f6faf6;color:#213321;min-height:100dvh;display:flex;flex-direct
 .centered{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;}
 .bottom-pad{padding-bottom:4vh;}
 
-/* ロゴ + タイトル (index) */
+/* ロゴ & アプリ名（ホーム） */
 .logo{width:40vmin;max-width:160px;height:auto;margin:4vh auto 2vh;}
 .app-name{font-size:1.8rem;font-weight:600;margin-bottom:6vh;color:#213321;}
 
-/* ヘッダー */
+/* ヘッダー（質問・結果） */
 .mini-header{padding:1rem 1rem 0.5rem;position:relative;z-index:1001;}
-.title-center{text-align:center;font-weight:600;margin:0;}
-.loading-msg{margin-top:.4rem;font-size:.85rem;color:#666;}
+.title-center{font-weight:600;text-align:center;margin:0;}
+.loading-msg{
+  text-align:center;
+  width:100%;
+  margin-top:.6rem;
+  font-size:.9rem;
+  font-weight:600;
+  color:#555;
+}
 .loading-msg.hidden{display:none;}
 .spacer{height:8vh;}
 
 /* ===== ボタン ===== */
-.btn{padding:1rem 2.6rem;border:none;border-radius:9999px;font-size:1.1rem;cursor:pointer;transition:transform .25s,box-shadow .25s;}
+.btn{padding:1rem 2.6rem;border:none;border-radius:9999px;font-size:1.1rem;cursor:pointer;transition:.25s;}
 .btn.primary{background:#43a047;color:#fff;}
 .btn.secondary{background:#fff;color:#43a047;border:2px solid #43a047;}
 .btn:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,.12);}
 .btn:disabled{opacity:.5;pointer-events:none;}
+#btnFinish{margin:4vh auto 6vh auto;}         /* 余白を追加 */
 #btnFinish.hidden{display:none;}
 
-/* ===== 質問カード & アニメ ===== */
+/* ===== 質問カード ===== */
 @keyframes slideFade{0%{opacity:0;transform:translateY(30px);}100%{opacity:1;transform:none;}}
 .card{
   background:#fff;border-radius:1.5rem;padding:1.5rem;margin:2rem 1rem;
@@ -59,7 +67,7 @@ body{background:#f6faf6;color:#213321;min-height:100dvh;display:flex;flex-direct
 .spinner{width:56px;height:56px;border:6px solid #a5d6a7;border-top-color:#43a047;border-radius:50%;animation:spin 1.2s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg);}}
 
-/* フェード項目(結果タイプ→メニュー→ボタン) */
+/* フェード順序アニメ (結果画面) */
 @keyframes fadeUp{0%{opacity:0;transform:translateY(25px);}100%{opacity:1;transform:none;}}
 .fade-item{opacity:0;animation:fadeUp .8s forwards;}
 

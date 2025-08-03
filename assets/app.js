@@ -1,13 +1,13 @@
-// ---------------- 共通設定 ----------------
+// ========= 共通設定 =========
 const GAS_ENDPOINT =
   'https://script.google.com/macros/s/AKfycbyHeY6tH9r7-UIlMUdWFDlos7OmQdW-6mcnBe4yaFnoFPvJB6XcFdttMj2-IlWM65ucrw/exec';
 
-// ---------------- ページ判定 ----------------
+// ----------- ページ判定 -----------
 const page = location.pathname.split('/').pop();
 if(page.endsWith('quiz.html'))   runQuiz();
 if(page.endsWith('result.html')) showResult();
 
-// ---------------- ローダー & メッセージ ----------------
+// ----------- ローダー ----------
 function showLoader(show=true){
   document.getElementById('loader')?.classList.toggle('hidden', !show);
   document.getElementById('loadingMsg')?.classList.toggle('hidden', !show);
@@ -22,11 +22,8 @@ async function runQuiz(){
     const res  = await fetch(`${GAS_ENDPOINT}?action=getQuiz`);
     const data = await res.json();
     renderQuestions(data.questions,data.choices);
-  }catch(e){
-    alert('データ取得に失敗しました');console.error(e);
-  }finally{
-    showLoader(false);
-  }
+  }catch(e){ alert('データ取得に失敗しました'); console.error(e);}
+  finally{ showLoader(false); }
 }
 
 function renderQuestions(qs, choices){
@@ -35,19 +32,14 @@ function renderQuestions(qs, choices){
   const answered  = {};
 
   btnFinish.onclick = () => {
-    showLoader(true);                   // 即ローダー
+    showLoader(true);                               // 即表示
     submitLog(answered).then(()=>location.href='result.html');
   };
 
   const updateBar = () => {
     const cnt = Object.keys(answered).length;
     document.getElementById('progressBar').style.width = `${(cnt/qs.length)*100}%`;
-    // 完了判定
-    if(cnt === qs.length){
-      btnFinish.classList.remove('hidden');
-    }else{
-      btnFinish.classList.add('hidden');
-    }
+    btnFinish.classList.toggle('hidden', cnt !== qs.length);
   };
 
   qs.forEach((q,idx)=>{
@@ -63,7 +55,6 @@ function renderQuestions(qs, choices){
         [...card.querySelectorAll('.choice')].forEach(b=>b.classList.remove('selected'));
         btn.classList.add('selected');
         answered[q.id]=cid;
-
         if(idx+1<qs.length){
           root.children[idx+1].classList.remove('inactive');
           root.children[idx+1].scrollIntoView({behavior:'smooth',block:'center'});
@@ -93,20 +84,23 @@ async function showResult(){
     const res  = await fetch(GAS_ENDPOINT,{method:'POST',body:form});
     const data = await res.json();
 
-    /* 1) タイプ表示 */
+    /* タイトルにフェード */
     const header = document.getElementById('resultTitle');
-    header.nextElementSibling?.remove();
+    header.classList.add('fade-item');
+    header.style.animationDelay = '.1s';
+
+    /* 説明文 */
     const p = document.createElement('p');
     p.className = 'title-center fade-item';
-    p.style.animationDelay = '.2s';
+    p.style.animationDelay = '.4s';
     p.innerHTML = `診断の結果、あなたのタイプは<strong>「${data.type}」</strong>でした`;
     header.insertAdjacentElement('afterend', p);
 
-    /* 2) メニューカード */
+    /* メニューカード */
     const list = document.getElementById('menuList');
     list.innerHTML='';
     data.menus.forEach((m,i)=>{
-      const delay = .6 + i*0.3;               // 2 番目に順次
+      const delay = .8 + i*0.3;
       list.insertAdjacentHTML('beforeend',
         `<div class="card fade-item" style="animation-delay:${delay}s">
            ${m.img?`<img src="${m.img}" alt="${m.name}" style="width:100%;border-radius:1rem;">`:''}
@@ -114,13 +108,13 @@ async function showResult(){
          </div>`);
     });
 
-    /* 3) ホームへ戻るボタン */
-    const navBtn = document.querySelector('nav.bottom-pad');
-    navBtn.classList.add('fade-item');
-    navBtn.style.animationDelay = (.6 + data.menus.length*0.3 + .3) + 's';
+    /* ホームへ戻るボタン */
+    const nav = document.querySelector('nav.bottom-pad');
+    nav.classList.add('fade-item');
+    nav.style.animationDelay = (.8 + data.menus.length*0.3 + .3) + 's';
 
   }catch(e){
-    alert('結果取得に失敗しました');console.error(e);
+    alert('結果取得に失敗しました'); console.error(e);
   }finally{
     showLoader(false);
   }
