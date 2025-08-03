@@ -56,6 +56,16 @@ body{
   margin:0;
 }
 
+/* ★ 見出しを少し小さくする */
+.mini-header .title-center{
+  font-size:1.4rem;
+}
+@media (min-width:720px){
+  .mini-header .title-center{
+    font-size:1.6rem;
+  }
+}
+
 /* プログレスバー */
 #progressWrap{
   width:100%;
@@ -101,7 +111,7 @@ body{
 }
 .btn:disabled{opacity:.5;pointer-events:none;}
 #btnFinish{
-  margin:5vh auto 7vh auto;   /* 余白追加 */
+  margin:5vh auto 7vh auto;
 }
 #btnFinish.hidden{display:none;}
 
@@ -174,7 +184,7 @@ body{
   position:fixed;
   inset:0;
   display:flex;
-  flex-direction:column;        /* スピナーとテキストを縦並びに */
+  flex-direction:column;      /* スピナーとテキストを縦並びに */
   justify-content:center;
   align-items:center;
   background:rgba(255,255,255,.7);

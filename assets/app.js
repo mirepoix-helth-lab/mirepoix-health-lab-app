@@ -35,7 +35,7 @@ function renderQuestions(qs, choices) {
   const answered  = {};
 
   btnFinish.onclick = () => {
-    /* --- ★ 追加：回答を localStorage に保存 --- */
+    /* --- 回答を localStorage に保存 --- */
     localStorage.setItem('answers', JSON.stringify(answered));
 
     showLoader(true);                 // すぐにローダーを表示
@@ -44,13 +44,25 @@ function renderQuestions(qs, choices) {
     });
   };
 
+  /* ---------- プログレスバー & 完了ボタン更新 ---------- */
   const updateBar = () => {
     const done = Object.keys(answered).length;
+
+    /* プログレスバー */
     document.getElementById('progressBar').style.width =
       `${(done / qs.length) * 100}%`;
-    btnFinish.classList.toggle('hidden', done !== qs.length);
+
+    /* 完了ボタン表示切替 */
+    const allDone = done === qs.length;
+    btnFinish.classList.toggle('hidden', !allDone);
+
+    /* 全問終了したらボタンを中央にスクロール */
+    if (allDone) {
+      btnFinish.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
   };
 
+  /* ---------- 質問カード生成 ---------- */
   qs.forEach((q, idx) => {
     const card = document.createElement('section');
     card.className = 'card' + (idx ? ' inactive' : '');
@@ -61,13 +73,13 @@ function renderQuestions(qs, choices) {
       btn.className = 'choice';
       btn.innerHTML = `<span>${choices[cid].text}</span>`;
       btn.onclick = () => {
-        // mark selection
+        /* 選択状態の切り替え */
         [...card.querySelectorAll('.choice')]
           .forEach(b => b.classList.remove('selected'));
         btn.classList.add('selected');
         answered[q.id] = cid;
 
-        // unlock next question
+        /* 次の質問を解放してスクロール */
         if (idx + 1 < qs.length) {
           root.children[idx + 1].classList.remove('inactive');
           root.children[idx + 1]
@@ -134,7 +146,7 @@ async function showResult() {
     console.error(e);
   } finally {
     showLoader(false);
-    /* --- ★ 結果を表示し終えたので回答をクリア（任意） --- */
+    /* --- 見終わったら回答をクリア（任意） --- */
     localStorage.removeItem('answers');
   }
 }
