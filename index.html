@@ -1,1 +1,33 @@
 test
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ヘルシーメニュー診断</title>
+  <link rel="stylesheet" href="assets/style.css" />
+  <!-- Google Material Icons（チェックマーク等）-->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+</head>
+<body class="screen centered fade-in">
+  <header>
+    <img src="assets/icon.png" alt="logo" class="logo" />
+  </header>
+
+  <main>
+    <button id="btnStart" class="btn primary grow">スタート</button>
+  </main>
+
+  <footer class="social-links">
+    <a href="https://twitter.com/your_account" target="_blank" aria-label="X"><i class="material-icons">share</i></a>
+    <a href="https://instagram.com/your_account" target="_blank" aria-label="Instagram"><i class="material-icons">photo_camera</i></a>
+    <a href="https://your-web.com" target="_blank" aria-label="Web"><i class="material-icons">public</i></a>
+  </footer>
+
+  <script>
+    document.getElementById('btnStart').addEventListener('click', () => {
+      window.location.href = 'quiz.html';
+    });
+  </script>
+</body>
+</html>
