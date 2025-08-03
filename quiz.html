@@ -11,7 +11,6 @@
   <header class="mini-header">
     <h1 class="title-center">メニュー診断</h1>
     <div id="progressWrap"><div id="progressBar"></div></div>
-    <p id="loadingMsg" class="loading-msg hidden">読み込み中です…</p>
   </header>
 
   <main id="quizArea"></main>
@@ -20,8 +19,11 @@
     <button id="btnFinish" class="btn primary hidden">回答完了</button>
   </div>
 
-  <!-- ローダー -->
-  <div id="loader" class="hidden"><div class="spinner"></div></div>
+  <!-- ローダー（スピナー + テキスト） -->
+  <div id="loader" class="hidden">
+    <div class="spinner"></div>
+    <p class="load-text">読み込み中です…</p>
+  </div>
 
   <script type="module" src="assets/app.js"></script>
 </body>
