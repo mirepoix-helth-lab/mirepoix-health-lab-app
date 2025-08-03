@@ -7,9 +7,10 @@ const page = location.pathname.split('/').pop();
 if(page.endsWith('quiz.html'))   runQuiz();
 if(page.endsWith('result.html')) showResult();
 
-// ---------------- ローダー ----------------
+// ---------------- ローダー & メッセージ ----------------
 function showLoader(show=true){
   document.getElementById('loader')?.classList.toggle('hidden', !show);
+  document.getElementById('loadingMsg')?.classList.toggle('hidden', !show);
 }
 
 /* ------------------------------------------------------------
@@ -29,12 +30,21 @@ async function runQuiz(){
 }
 
 function renderQuestions(qs, choices){
-  const root = document.getElementById('quizArea');
-  const answered = {};
+  const root      = document.getElementById('quizArea');
+  const btnFinish = document.getElementById('btnFinish');
+  const answered  = {};
 
-  const updateBar = ()=>{
-    const pct = (Object.keys(answered).length/qs.length)*100;
-    document.getElementById('progressBar').style.width = `${pct}%`;
+  btnFinish.onclick = () => {
+    showLoader(true);                         // ← 即ローダー表示
+    submitLog(answered).then(()=>location.href='result.html');
+  };
+
+  const updateBar = () => {
+    const cnt = Object.keys(answered).length;
+    document.getElementById('progressBar').style.width = `${(cnt/qs.length)*100}%`;
+    if(cnt === qs.length){                   // 全回答済み
+      btnFinish.classList.remove('hidden');
+    }
   };
 
   qs.forEach((q,idx)=>{
@@ -54,9 +64,6 @@ function renderQuestions(qs, choices){
         if(idx+1<qs.length){
           root.children[idx+1].classList.remove('inactive');
           root.children[idx+1].scrollIntoView({behavior:'smooth',block:'center'});
-        }else{
-          localStorage.setItem('answers',JSON.stringify(answered));
-          submitLog(answered).then(()=>location.href='result.html');
         }
         updateBar();
       };
@@ -81,9 +88,9 @@ async function showResult(){
   try{
     showLoader(true);
     const res  = await fetch(GAS_ENDPOINT,{method:'POST',body:form});
-    const data = await res.json();   // {type, menus}
+    const data = await res.json();
 
-    /* タイトルは固定で↓にメッセージ */
+    /* タイトル固定＋説明文 */
     document.getElementById('resultTitle').nextElementSibling?.remove();
     document.getElementById('resultTitle').insertAdjacentHTML(
       'afterend',
