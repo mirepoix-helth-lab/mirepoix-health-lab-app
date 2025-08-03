@@ -1,78 +1,223 @@
-/* ========== ベース & レイアウト ========== */
-*{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;}
-body{background:#f6faf6;color:#213321;min-height:100dvh;display:flex;flex-direction:column;}
-@keyframes fadeScreen{0%{opacity:0;transform:translateY(18px);}100%{opacity:1;transform:none;}}
-.screen{animation:fadeScreen .6s ease-out;}
-.home-center{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;}
-.centered{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;}
-.bottom-pad{padding-bottom:4vh;}
-
-/* ロゴ & アプリ名 (index) */
-.logo{width:40vmin;max-width:160px;height:auto;margin:4vh auto 2vh;}
-.app-name{font-size:1.8rem;font-weight:600;margin-bottom:6vh;color:#213321;}
-
-/* ===== ヘッダー (質問・結果) ===== */
-.mini-header{
-  position:sticky;top:0;width:100%;
-  background:#f6faf6;z-index:1001;
-  padding:1rem 1rem 0.5rem;
+/* ============================================================
+   Global Base
+============================================================ */
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
 }
-.title-center{text-align:center;font-weight:600;margin:0;}
+body{
+  background:#f6faf6;
+  color:#213321;
+  min-height:100dvh;
+  display:flex;
+  flex-direction:column;
+}
 
-/* プログレスバー */
-#progressWrap{width:100%;height:4px;background:#e8f5e9;margin-top:.5rem;border-radius:2px;overflow:hidden;}
-#progressBar{height:100%;width:0%;background:#43a047;transition:width .3s;}
+/* 画面フェード */
+@keyframes fadeScreen{
+  0%{opacity:0;transform:translateY(18px);}
+  100%{opacity:1;transform:none;}
+}
+.screen{animation:fadeScreen .6s ease-out;}
 
-/* 「読み込み中です…」 */
+/* 共通ユーティリティ */
+.home-center{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;}
+.centered    {display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;}
+.bottom-pad  {padding-bottom:4vh;}
+
+/* ============================================================
+   Index – Logo & App Name
+============================================================ */
+.logo{
+  width:40vmin;
+  max-width:160px;
+  height:auto;
+  margin:4vh auto 2vh;
+}
+.app-name{
+  font-size:1.8rem;
+  font-weight:600;
+  margin-bottom:6vh;
+  color:#213321;
+}
+
+/* ============================================================
+   Sticky Header (Quiz / Result)
+============================================================ */
+.mini-header{
+  position:sticky;
+  top:0;
+  width:100%;
+  background:#f6faf6;
+  z-index:1001;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  padding:1rem 1rem 0;
+}
+.title-center{
+  text-align:center;
+  font-weight:600;
+  margin:0;
+}
+
+/* Progress Bar */
+#progressWrap{
+  width:100%;
+  height:4px;
+  background:#e8f5e9;
+  margin-top:.5rem;
+  border-radius:2px;
+  overflow:hidden;
+}
+#progressBar{
+  height:100%;
+  width:0%;
+  background:#43a047;
+  transition:width .3s;
+}
+
+/* Loading text */
 .loading-msg{
-  text-align:center;width:100%;margin-top:.7rem;
-  font-size:.9rem;font-weight:600;color:#555;
+  width:100%;
+  text-align:center;
+  margin:.6rem 0 0 0;      /* only top margin */
+  font-size:.9rem;
+  font-weight:600;
+  color:#555;
 }
 .loading-msg.hidden{display:none;}
 
-/* ===== ボタン ===== */
-.btn{padding:1rem 2.6rem;border:none;border-radius:9999px;font-size:1.1rem;cursor:pointer;transition:.25s;}
-.btn.primary{background:#43a047;color:#fff;}
-.btn.secondary{background:#fff;color:#43a047;border:2px solid #43a047;}
-.btn:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,.12);}
-.btn:disabled{opacity:.5;pointer-events:none;}
-#btnFinish{margin:5vh auto 7vh auto;}      /* 余白追加 */
+/* ============================================================
+   Buttons
+============================================================ */
+.btn{
+  padding:1rem 2.6rem;
+  border:none;
+  border-radius:9999px;
+  font-size:1.1rem;
+  cursor:pointer;
+  transition:transform .25s,box-shadow .25s;
+}
+.btn.primary   {background:#43a047;color:#fff;}
+.btn.secondary {background:#fff;color:#43a047;border:2px solid #43a047;}
+.btn:hover     {transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,.12);}
+.btn:disabled  {opacity:.5;pointer-events:none;}
+
+#btnFinish{
+  margin:5vh auto 7vh auto;   /* extra breathing room */
+}
 #btnFinish.hidden{display:none;}
 
-/* ===== 質問カード ===== */
-@keyframes slideFade{0%{opacity:0;transform:translateY(32px);}100%{opacity:1;transform:none;}}
+/* ============================================================
+   Quiz Cards & Choices
+============================================================ */
+@keyframes slideFade{
+  0%{opacity:0;transform:translateY(32px);}
+  100%{opacity:1;transform:none;}
+}
 .card{
-  background:#fff;border-radius:1.5rem;padding:1.5rem;margin:2rem 1rem;
+  background:#fff;
+  border-radius:1.5rem;
+  padding:1.5rem;
+  margin:2rem 1rem;
   box-shadow:0 4px 12px rgba(0,0,0,.1);
   animation:slideFade 2.2s cubic-bezier(.2,.6,.3,1) both;
 }
-.card.inactive{opacity:.25;pointer-events:none;filter:blur(1px) grayscale(.4);}
+.card.inactive{
+  opacity:.25;
+  pointer-events:none;
+  filter:blur(1px) grayscale(.4);
+}
 .card:nth-child(1){animation-delay:1s;}
 .card:nth-child(2){animation-delay:2s;}
 .card:nth-child(3){animation-delay:3s;}
 .card:nth-child(n+4){animation-delay:4s;}
 
-/* 選択肢 */
-.choice{width:100%;margin:.6rem 0;padding:1rem 1.1rem;border:2px solid #a5d6a7;border-radius:1rem;background:#fff;color:#33691e;font-size:1rem;display:flex;justify-content:space-between;align-items:center;transition:.25s;}
-.choice.selected{background:#dcedc8;border-color:#66bb6a;}
+/* Choices */
+.choice{
+  width:100%;
+  margin:.6rem 0;
+  padding:1rem 1.1rem;
+  border:2px solid #a5d6a7;
+  border-radius:1rem;
+  background:#fff;
+  color:#33691e;
+  font-size:1rem;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  transition:.25s;
+}
+.choice.selected{
+  background:#dcedc8;
+  border-color:#66bb6a;
+}
 .choice .material-icons{display:none;}
 
-/* ===== SNS ===== */
-.social-links{margin-top:auto;padding:1rem;display:flex;justify-content:center;gap:1.2rem;}
-.social-links a{color:#43a047;font-size:2rem;text-decoration:none;opacity:.8;transition:.2s;}
-.social-links a:hover{opacity:1;transform:translateY(-2px);}
+/* ============================================================
+   Animated Fade Items (Result Page)
+============================================================ */
+@keyframes fadeUp{
+  0%{opacity:0;transform:translateY(25px);}
+  100%{opacity:1;transform:none;}
+}
+.fade-item{
+  opacity:0;
+  animation:fadeUp .85s forwards;
+}
 
-/* ===== ローディングオーバーレイ ===== */
-#loader{position:fixed;inset:0;display:flex;justify-content:center;align-items:center;background:rgba(255,255,255,.7);backdrop-filter:blur(2px);z-index:999;}
+/* ============================================================
+   Social Links
+============================================================ */
+.social-links{
+  margin-top:auto;
+  padding:1rem;
+  display:flex;
+  justify-content:center;
+  gap:1.2rem;
+}
+.social-links a{
+  color:#43a047;
+  font-size:2rem;
+  text-decoration:none;
+  opacity:.8;
+  transition:.2s;
+}
+.social-links a:hover{
+  opacity:1;
+  transform:translateY(-2px);
+}
+
+/* ============================================================
+   Loading Overlay
+============================================================ */
+#loader{
+  position:fixed;
+  inset:0;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background:rgba(255,255,255,.7);
+  backdrop-filter:blur(2px);
+  z-index:999;
+}
 #loader.hidden{display:none;}
-.spinner{width:56px;height:56px;border:6px solid #a5d6a7;border-top-color:#43a047;border-radius:50%;animation:spin 1.2s linear infinite;}
+.spinner{
+  width:56px;
+  height:56px;
+  border:6px solid #a5d6a7;
+  border-top-color:#43a047;
+  border-radius:50%;
+  animation:spin 1.2s linear infinite;
+}
 @keyframes spin{to{transform:rotate(360deg);}}
 
-/* ===== フェード順序 (結果画面) ===== */
-@keyframes fadeUp{0%{opacity:0;transform:translateY(25px);}100%{opacity:1;transform:none;}}
-.fade-item{opacity:0;animation:fadeUp .85s forwards;}
-
-/* ===== レスポンシブ ===== */
+/* ============================================================
+   Responsive
+============================================================ */
 @media (min-width:720px){
   .card{margin:2rem auto;max-width:480px;}
   .choice{font-size:1.1rem;}
