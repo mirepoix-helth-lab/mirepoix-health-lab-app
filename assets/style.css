@@ -1,49 +1,49 @@
-/* ---------------- ベース ---------------- */
+/* ===== ベース ===== */
 *{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;}
 body{background:#f6faf6;color:#213321;min-height:100dvh;display:flex;flex-direction:column;}
 .screen{animation:fadeScreen .6s ease-out;}
+.home-center{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;}
+.logo{width:40vmin;max-width:160px;height:auto;margin:4vh auto 2vh;}
+.app-name{font-size:1.8rem;font-weight:600;margin-bottom:6vh;color:#213321;}
+.mini-header{padding:1rem 1rem 0.5rem;position:relative;z-index:1001;} /* ←ヘッダーをローダーより上に */
 .title-center{text-align:center;font-weight:600;margin:0;}
-.logo{width:40vmin;max-width:160px;height:auto;margin:8vh auto 4vh;}
-.mini-header{padding:1rem 1rem 0.5rem;}
-.spacer{height:10vh;}
+.spacer{height:8vh;}
 
-/* ---------------- ボタン ---------------- */
+/* ===== ボタン ===== */
 .btn{padding:1rem 2.5rem;border:none;border-radius:9999px;font-size:1.1rem;cursor:pointer;transition:transform .25s,box-shadow .25s;}
 .btn.primary{background:#43a047;color:#fff;}
 .btn.secondary{background:#fff;color:#43a047;border:2px solid #43a047;}
+.btn:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,.12);}
 .btn:disabled{opacity:.5;pointer-events:none;}
-.btn:hover{transform:translateY(-2px);box-shadow:0 4px 10px rgba(0,0,0,.1);}
 
-/* ---------------- 質問カード ---------------- */
+/* ===== 質問カード ===== */
 .card{
   background:#fff;border-radius:1.5rem;padding:1.5rem;margin:2rem 1rem;
-  box-shadow:0 4px 12px rgba(0,0,0,.1);animation:slideFade .7s cubic-bezier(.2,.6,.3,1) both;
+  box-shadow:0 4px 12px rgba(0,0,0,.1);animation:slideFade 1.4s cubic-bezier(.2,.6,.3,1) both;
 }
 .card.inactive{opacity:.25;pointer-events:none;filter:blur(1px) grayscale(.4);}
-.card:nth-child(1){animation-delay:.2s;}
-.card:nth-child(2){animation-delay:.4s;}
-.card:nth-child(3){animation-delay:.6s;}
-.card:nth-child(n+4){animation-delay:.8s;}
+.card:nth-child(1){animation-delay:.4s;}
+.card:nth-child(2){animation-delay:.8s;}
+.card:nth-child(3){animation-delay:1.2s;}
+.card:nth-child(n+4){animation-delay:1.6s;}
 
-/* ---------------- 選択肢 ---------------- */
+/* ===== 選択肢 ===== */
 .choice{
-  width:100%;margin:.5rem 0;padding:.9rem 1rem;border:2px solid #a5d6a7;border-radius:1rem;
+  width:100%;margin:.6rem 0;padding:1rem 1.1rem;border:2px solid #a5d6a7;border-radius:1rem;
   background:#fff;color:#33691e;font-size:1rem;display:flex;justify-content:space-between;align-items:center;
-  transition:.2s;
+  transition:.25s;
 }
 .choice.selected{background:#dcedc8;border-color:#66bb6a;}
 .choice .material-icons{display:none;}
 
-/* ---------------- プログレスバー ---------------- */
+/* ===== バー & SNS ===== */
 #progressWrap{width:100%;height:4px;background:#e8f5e9;margin-top:.5rem;border-radius:2px;overflow:hidden;}
 #progressBar{height:100%;width:0%;background:#43a047;transition:width .3s;}
-
-/* ---------------- SNS ---------------- */
 .social-links{margin-top:auto;padding:1rem;display:flex;justify-content:center;gap:1.2rem;}
 .social-links a{color:#43a047;font-size:2rem;text-decoration:none;opacity:.8;transition:.2s;}
 .social-links a:hover{opacity:1;transform:translateY(-2px);}
 
-/* ---------------- ローディング ---------------- */
+/* ===== ローディング ===== */
 #loader{
   position:fixed;inset:0;display:flex;justify-content:center;align-items:center;
   background:rgba(255,255,255,.7);backdrop-filter:blur(2px);z-index:999;
@@ -54,12 +54,12 @@ body{background:#f6faf6;color:#213321;min-height:100dvh;display:flex;flex-direct
   border-radius:50%;animation:spin 1.2s linear infinite;
 }
 
-/* ---------------- アニメーション ---------------- */
+/* ===== アニメーション ===== */
 @keyframes spin{to{transform:rotate(360deg);}}
-@keyframes slideFade{0%{opacity:0;transform:translateY(20px);}100%{opacity:1;transform:none;}}
-@keyframes fadeScreen{0%{opacity:0;transform:translateY(15px);}100%{opacity:1;transform:none;}}
+@keyframes slideFade{0%{opacity:0;transform:translateY(25px);}100%{opacity:1;transform:none;}}
+@keyframes fadeScreen{0%{opacity:0;transform:translateY(18px);}100%{opacity:1;transform:none;}}
 
-/* ---------------- レスポンシブ ---------------- */
+/* ===== レスポンシブ ===== */
 @media (min-width:720px){
   .card{margin:2rem auto;max-width:480px;}
   .choice{font-size:1.1rem;}

@@ -3,14 +3,15 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>ヘルシーメニュー診断</title>
+  <title>テストアプリホーム</title>
   <link rel="stylesheet" href="assets/style.css" />
-  <!-- Google Material Icons（チェックマーク等）-->
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
-<body class="screen centered fade-in">
+
+<body class="screen home-center">
   <header>
     <img src="assets/icon.png" alt="logo" class="logo" />
+    <h1 class="app-name">メニュー診断</h1>
   </header>
 
   <main>
@@ -23,10 +24,11 @@
     <a href="https://your-web.com" target="_blank" aria-label="Web"><i class="material-icons">public</i></a>
   </footer>
 
+  <!-- ローダー（共通） -->
+  <div id="loader" class="hidden"><div class="spinner"></div></div>
+
   <script>
-    document.getElementById('btnStart').addEventListener('click', () => {
-      window.location.href = 'quiz.html';
-    });
+    document.getElementById('btnStart').onclick = () => location.href = 'quiz.html';
   </script>
 </body>
 </html>

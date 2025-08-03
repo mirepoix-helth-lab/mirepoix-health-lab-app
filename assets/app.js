@@ -45,7 +45,7 @@ function renderQuestions(qs, choices){
     q.choiceIds.forEach(cid=>{
       const btn = document.createElement('button');
       btn.className='choice';
-      btn.innerHTML=`<span>${choices[cid].text}</span><i class="material-icons">check_circle</i>`;
+      btn.innerHTML=`<span>${choices[cid].text}</span>`;
       btn.onclick=()=>{
         [...card.querySelectorAll('.choice')].forEach(b=>b.classList.remove('selected'));
         btn.classList.add('selected');
@@ -81,9 +81,17 @@ async function showResult(){
   try{
     showLoader(true);
     const res  = await fetch(GAS_ENDPOINT,{method:'POST',body:form});
-    const data = await res.json();
+    const data = await res.json();   // {type, menus}
 
-    document.getElementById('resultTitle').textContent = data.type;
+    /* タイトルは固定で↓にメッセージ */
+    document.getElementById('resultTitle').nextElementSibling?.remove();
+    document.getElementById('resultTitle').insertAdjacentHTML(
+      'afterend',
+      `<p class="title-center" style="margin-top:.6rem;font-size:1rem;">
+         診断の結果、あなたのタイプは<strong>「${data.type}」</strong>でした
+       </p>`
+    );
+
     const list = document.getElementById('menuList');
     list.innerHTML='';
     data.menus.forEach(m=>{
