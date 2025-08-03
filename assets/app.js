@@ -2,12 +2,12 @@
 const GAS_ENDPOINT =
   'https://script.google.com/macros/s/AKfycbyHeY6tH9r7-UIlMUdWFDlos7OmQdW-6mcnBe4yaFnoFPvJB6XcFdttMj2-IlWM65ucrw/exec';
 
-// ----------- ページ判定 -----------
+// -------- ページ判定 --------
 const page = location.pathname.split('/').pop();
 if(page.endsWith('quiz.html'))   runQuiz();
 if(page.endsWith('result.html')) showResult();
 
-// ----------- ローダー ----------
+// -------- ローダー＋メッセージ --------
 function showLoader(show=true){
   document.getElementById('loader')?.classList.toggle('hidden', !show);
   document.getElementById('loadingMsg')?.classList.toggle('hidden', !show);
@@ -22,8 +22,8 @@ async function runQuiz(){
     const res  = await fetch(`${GAS_ENDPOINT}?action=getQuiz`);
     const data = await res.json();
     renderQuestions(data.questions,data.choices);
-  }catch(e){ alert('データ取得に失敗しました'); console.error(e);}
-  finally{ showLoader(false); }
+  }catch(e){alert('データ取得に失敗しました');console.error(e);}
+  finally{showLoader(false);}
 }
 
 function renderQuestions(qs, choices){
@@ -32,7 +32,7 @@ function renderQuestions(qs, choices){
   const answered  = {};
 
   btnFinish.onclick = () => {
-    showLoader(true);                               // 即表示
+    showLoader(true);                                // 即ローダー
     submitLog(answered).then(()=>location.href='result.html');
   };
 
@@ -71,9 +71,9 @@ function renderQuestions(qs, choices){
    結果画面
 ------------------------------------------------------------ */
 async function showResult(){
-  const ansStr = localStorage.getItem('answers');
-  if(!ansStr) return location.href='index.html';
-  const answers = JSON.parse(ansStr);
+  const answersStr = localStorage.getItem('answers');
+  if(!answersStr) return location.href='index.html';
+  const answers = JSON.parse(answersStr);
 
   const form = new URLSearchParams();
   form.append('action','getResult');
@@ -81,50 +81,43 @@ async function showResult(){
 
   showLoader(true);
   try{
-    const res  = await fetch(GAS_ENDPOINT,{method:'POST',body:form});
+    const res = await fetch(GAS_ENDPOINT,{method:'POST',body:form});
     const data = await res.json();
 
-    /* タイトルにフェード */
-    const header = document.getElementById('resultTitle');
-    header.classList.add('fade-item');
-    header.style.animationDelay = '.1s';
+    /* 1) タイプ説明 (fade) */
+    const header = document.getElementById('resultTitle'); // ←アニメなし
+    const desc = document.createElement('p');
+    desc.className='title-center fade-item';
+    desc.style.animationDelay='.3s';
+    desc.innerHTML=`診断の結果、あなたのタイプは<strong>「${data.type}」</strong>でした`;
+    header.insertAdjacentElement('afterend',desc);
 
-    /* 説明文 */
-    const p = document.createElement('p');
-    p.className = 'title-center fade-item';
-    p.style.animationDelay = '.4s';
-    p.innerHTML = `診断の結果、あなたのタイプは<strong>「${data.type}」</strong>でした`;
-    header.insertAdjacentElement('afterend', p);
-
-    /* メニューカード */
+    /* 2) メニューカード (fade) */
     const list = document.getElementById('menuList');
     list.innerHTML='';
     data.menus.forEach((m,i)=>{
-      const delay = .8 + i*0.3;
+      const d=.8+i*0.3;
       list.insertAdjacentHTML('beforeend',
-        `<div class="card fade-item" style="animation-delay:${delay}s">
+        `<div class="card fade-item" style="animation-delay:${d}s">
            ${m.img?`<img src="${m.img}" alt="${m.name}" style="width:100%;border-radius:1rem;">`:''}
            <h2 style="margin:1rem 0 .5rem">${m.name}</h2>
          </div>`);
     });
 
-    /* ホームへ戻るボタン */
-    const nav = document.querySelector('nav.bottom-pad');
+    /* 3) ホームへ戻るボタン (fade) */
+    const nav=document.querySelector('nav.bottom-pad');
     nav.classList.add('fade-item');
-    nav.style.animationDelay = (.8 + data.menus.length*0.3 + .3) + 's';
+    nav.style.animationDelay = (.8 + data.menus.length*0.3 + .3)+'s';
 
-  }catch(e){
-    alert('結果取得に失敗しました'); console.error(e);
-  }finally{
-    showLoader(false);
-  }
+  }catch(e){alert('結果取得に失敗しました');console.error(e);}
+  finally{showLoader(false);}
 }
 
 /* ------------------------------------------------------------
-   ログ送信
+   回答ログ送信
 ------------------------------------------------------------ */
 async function submitLog(obj){
-  const form = new URLSearchParams();
+  const form=new URLSearchParams();
   form.append('action','log');
   form.append('answers',JSON.stringify(obj));
   try{await fetch(GAS_ENDPOINT,{method:'POST',body:form});}
