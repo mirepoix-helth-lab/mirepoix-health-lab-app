@@ -1,112 +1,112 @@
-// === 共通設定 ===
-const GAS_ENDPOINT = 'https://script.google.com/macros/s/AKfycbyHeY6tH9r7-UIlMUdWFDlos7OmQdW-6mcnBe4yaFnoFPvJB6XcFdttMj2-IlWM65ucrw/exec'; // デプロイ後のURLに置換
+// ---------------- 共通設定 ----------------
+const GAS_ENDPOINT =
+  'https://script.google.com/macros/s/AKfycbyHeY6tH9r7-UIlMUdWFDlos7OmQdW-6mcnBe4yaFnoFPvJB6XcFdttMj2-IlWM65ucrw/exec';
 
-/* ===== Index / Quiz / Result 判定 ===== */
-const page = document.body?.id || document.location.pathname.split('/').pop();
+// ---------------- ページ判定 ----------------
+const page = location.pathname.split('/').pop();
+if(page.endsWith('quiz.html'))   runQuiz();
+if(page.endsWith('result.html')) showResult();
 
-if (page.endsWith('quiz.html')) runQuiz();
-if (page.endsWith('result.html')) showResult();
-
-/* --------- クイズ画面 --------- */
-async function runQuiz() {
-  // データ取得
-  const res = await fetch(`${GAS_ENDPOINT}?action=getQuiz`);
-  const data = await res.json();               // { questions:[{id,text,choiceIds:[]}], choices:{id:{text}}, total }
-  renderQuestions(data.questions, data.choices);
+// ---------------- ローダー ----------------
+function showLoader(show=true){
+  document.getElementById('loader')?.classList.toggle('hidden', !show);
 }
 
-function renderQuestions(qs, choicesMap) {
+/* ------------------------------------------------------------
+   クイズ画面
+------------------------------------------------------------ */
+async function runQuiz(){
+  try{
+    showLoader(true);
+    const res  = await fetch(`${GAS_ENDPOINT}?action=getQuiz`);
+    const data = await res.json();
+    renderQuestions(data.questions,data.choices);
+  }catch(e){
+    alert('データ取得に失敗しました');console.error(e);
+  }finally{
+    showLoader(false);
+  }
+}
+
+function renderQuestions(qs, choices){
   const root = document.getElementById('quizArea');
   const answered = {};
-  let current = 0;
 
-  const updateProgress = () => {
-    const pct = ((Object.keys(answered).length) / qs.length) * 100;
+  const updateBar = ()=>{
+    const pct = (Object.keys(answered).length/qs.length)*100;
     document.getElementById('progressBar').style.width = `${pct}%`;
   };
 
-  qs.forEach((q, idx) => {
+  qs.forEach((q,idx)=>{
     const card = document.createElement('section');
-    card.className = 'card' + (idx === 0 ? '' : ' inactive');
-    card.innerHTML = `<h2>Q${idx + 1}. ${q.text}</h2>`;
-    q.choiceIds.forEach(cid => {
+    card.className = 'card' + (idx?' inactive':'');
+    card.innerHTML = `<h2>Q${idx+1}. ${q.text}</h2>`;
+
+    q.choiceIds.forEach(cid=>{
       const btn = document.createElement('button');
-      btn.className = 'choice';
-      btn.innerHTML = `<span>${choicesMap[cid].text}</span><i class="material-icons">check_circle</i>`;
-      btn.addEventListener('click', () => {
-        // 選択状態の更新
-        [...card.querySelectorAll('.choice')].forEach(b => b.classList.remove('selected'));
+      btn.className='choice';
+      btn.innerHTML=`<span>${choices[cid].text}</span><i class="material-icons">check_circle</i>`;
+      btn.onclick=()=>{
+        [...card.querySelectorAll('.choice')].forEach(b=>b.classList.remove('selected'));
         btn.classList.add('selected');
-        answered[q.id] = cid;
-        // 次のカード活性化
-        if (idx + 1 < qs.length) {
-          root.children[idx + 1].classList.remove('inactive');
-          root.children[idx + 1].scrollIntoView({ behavior: 'smooth', block: 'center' });
-        } else {
-          // 完了 → 結果へ
-          localStorage.setItem('answers', JSON.stringify(answered));
-          submitLog(answered).then(() => location.href = 'result.html');
+        answered[q.id]=cid;
+
+        if(idx+1<qs.length){
+          root.children[idx+1].classList.remove('inactive');
+          root.children[idx+1].scrollIntoView({behavior:'smooth',block:'center'});
+        }else{
+          localStorage.setItem('answers',JSON.stringify(answered));
+          submitLog(answered).then(()=>location.href='result.html');
         }
-        updateProgress();
-      });
+        updateBar();
+      };
       card.appendChild(btn);
     });
     root.appendChild(card);
   });
 }
 
-/* ===== 結果画面 ===== */
-async function showResult() {
-  // 1) 回答を取得。無ければトップへリダイレクト
-  const answersStr = localStorage.getItem('answers');
-  if (!answersStr) {
-    window.location.href = 'index.html';
-    return;
-  }
-  const answers = JSON.parse(answersStr);
+/* ------------------------------------------------------------
+   結果画面
+------------------------------------------------------------ */
+async function showResult(){
+  const ansStr = localStorage.getItem('answers');
+  if(!ansStr) return location.href='index.html';
+  const answers = JSON.parse(ansStr);
 
-  // 2) フォームエンコードで POST → プリフライト (OPTIONS) を回避
   const form = new URLSearchParams();
-  form.append('action', 'getResult');
-  form.append('answers', JSON.stringify(answers));
+  form.append('action','getResult');
+  form.append('answers',JSON.stringify(answers));
 
-  try {
-    const res = await fetch(GAS_ENDPOINT, {
-      method: 'POST',
-      body: form           // ← Content-Type は自動で application/x-www-form-urlencoded
-    });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  try{
+    showLoader(true);
+    const res  = await fetch(GAS_ENDPOINT,{method:'POST',body:form});
+    const data = await res.json();
 
-    const data = await res.json();   // { type:'◯◯型', menus:[{name,img},…] }
-
-    /* 3) 画面に反映 */
     document.getElementById('resultTitle').textContent = data.type;
-
     const list = document.getElementById('menuList');
-    list.innerHTML = '';             // 念のためクリア
-    data.menus.forEach(m => {
-      const card = document.createElement('div');
-      card.className = 'card';
-      card.innerHTML = `
-        ${m.img ? `<img src="${m.img}" alt="${m.name}" style="width:100%;border-radius:1rem;">` : ''}
-        <h2 style="margin:1rem 0 .5rem;">${m.name}</h2>
-      `;
-      list.appendChild(card);
+    list.innerHTML='';
+    data.menus.forEach(m=>{
+      list.insertAdjacentHTML('beforeend',
+        `<div class="card">
+           ${m.img?`<img src="${m.img}" alt="${m.name}" style="width:100%;border-radius:1rem;">`:''}
+           <h2 style="margin:1rem 0 .5rem">${m.name}</h2>
+         </div>`);
     });
-
-  } catch (err) {
-    console.error('showResult error:', err);
-    alert('結果の取得に失敗しました。時間をおいて再度お試しください。');
+  }catch(e){
+    alert('結果取得に失敗しました');console.error(e);
+  }finally{
+    showLoader(false);
   }
 }
 
-/* --------- ログ送信 --------- */
-async function submitLog(obj) {
-  try {
-    await fetch(`${GAS_ENDPOINT}?action=log`, {
-      method: 'POST',
-      body: JSON.stringify({ answers: obj }),
-      headers: { 'Content-Type': 'application/json' }
-    });
-  } catch (e) { console.warn('log failed', e); }
+/* ------------------------------------------------------------
+   回答ログ送信
+------------------------------------------------------------ */
+async function submitLog(obj){
+  const form = new URLSearchParams();
+  form.append('action','log');
+  form.append('answers',JSON.stringify(obj));
+  try{ await fetch(GAS_ENDPOINT,{method:'POST',body:form}); }
+  catch(e){ console.warn('log failed',e); }
 }
