@@ -5,6 +5,25 @@
   padding:0;
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
 }
+
+/* === ホーム背景 ================================================= */
+.home-bg{
+  background:url("bg_home.png") center/contain no-repeat fixed; /* contain で上下左右を余らせず表示 */
+  background-color:#f6faf6;   /* 画像余白が透けた時の色 */
+}
+
+.home-main{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-end;
+  align-items:center;
+}
+
+.start-btn{
+  margin-bottom:8vh;
+}
+
 body{
   background:#f6faf6;
   color:#213321;
