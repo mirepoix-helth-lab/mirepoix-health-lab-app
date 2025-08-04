@@ -8,7 +8,7 @@
 
 /* === ホーム背景 ================================================= */
 .home-bg{
-  background:url("bg_home2.png") center/contain no-repeat fixed; /* contain で上下左右を余らせず表示 */
+  background:url("bg_home.png") center/contain no-repeat fixed; /* contain で上下左右を余らせず表示 */
   background-color:#f6faf6;   /* 画像余白が透けた時の色 */
 }
 
