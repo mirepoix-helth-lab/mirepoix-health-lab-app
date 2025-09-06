@@ -1,57 +1,121 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>活動紹介</title>
-  <link rel="stylesheet" href="assets/style.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>活動紹介 | mirepoix Health Lab</title>
+
+  <!-- 共通スタイル -->
+  <link rel="stylesheet" href="assets/style.css" />
+
+  <!-- Yomogi（手書き風フォント）※about専用で使用 -->
   <link href="https://fonts.googleapis.com/css2?family=Yomogi&display=swap" rel="stylesheet">
-  <script src="https://unpkg.com/scrollreveal"></script>
 </head>
 
-<body class="screen">
+<body class="screen about-page">
+  <!-- ヘッダー -->
   <header class="header">
-    <h1>活動紹介</h1>
+    活動紹介
+    <span class="sub">mirepoix Health Lab</span>
   </header>
 
-  <section class="intro section">
-    <img src="your-image1.jpg" alt="活動イメージ" class="sr-img">
-    <p class="sr-text">日々の体調不良――たとえば「なんとなくだるい」「疲れやすい」「肌荒れが気になる」「イライラする」など――それって、もしかすると“栄養不足のサイン”かもしれません。</p>
+  <!-- ヒーロー：導入テキスト + 画像 -->
+  <section class="about-hero">
+    <h1 class="about-title reveal">食と健康を、もっとやさしく。</h1>
+    <p class="about-lead reveal">
+      私たちは“見えにくい栄養の偏り”に気づくきっかけをつくるための活動を行っています。
+      スマホから気軽に体調チェックができ、毎日の食の選び方が少しずつ前向きになる——そんな体験を届けます。
+    </p>
+    <div class="a-media reveal">
+      <!-- 画像パスは差し替えてください -->
+      <img src="assets/icon.png" alt="mirepoix Health Lab の活動イメージ">
+    </div>
   </section>
 
-  <section class="section">
-    <img src="your-image2.jpg" alt="mirepoix Health Lab" class="sr-img">
-    <p class="sr-text">でも、「自分に何が足りていないのか」「どんな食事を選べばいいのか」は、なかなか気づきにくいもの。私たちは、そんな“見えにくい栄養の偏り”に気づくきっかけを作りたいと考え、自分に不足しているかもしれない栄養素や、今の体の状態をチェックできるmirepoix Health Lab presentsー今日のカラダ診断ーをつくりました。</p>
+  <!-- セクション1：本文 + 画像 -->
+  <section class="about-section">
+    <div class="a-row stagger reveal">
+      <div class="a-content">
+        <p>日々の体調不良――たとえば「なんとなくだるい」「疲れやすい」「肌荒れが気になる」「イライラする」など――それって、もしかすると“栄養不足のサイン”かもしれません。</p>
+      </div>
+      <div class="a-media">
+        <img src="assets/about/01.jpg" alt="日々の体調と栄養の関係">
+      </div>
+    </div>
   </section>
 
-  <section class="section">
-    <img src="your-image3.jpg" alt="コラボレーション" class="sr-img">
-    <p class="sr-text">mirepoix Health Labは、管理栄養学を学ぶ学生とフレンチシェフが協力し、食と健康をもっと身近に、そして楽しく感じてもらえるよう工夫しています。</p>
+  <!-- セクション2 -->
+  <section class="about-section">
+    <div class="a-row stagger reveal">
+      <div class="a-content">
+        <p>でも、「自分に何が足りていないのか」「どんな食事を選べばいいのか」は、なかなか気づきにくいもの。</p>
+        <p>私たちは、そんな“見えにくい栄養の偏り”に気づくきっかけを作りたいと考え、自分に不足しているかもしれない栄養素や、今の体の状態をチェックできる <strong>mirepoix Health Lab presents ー 今日のカラダ診断 ー</strong> をつくりました。</p>
+      </div>
+      <div class="a-media">
+        <img src="assets/about/02.jpg" alt="今日のカラダ診断のイメージ">
+      </div>
+    </div>
   </section>
 
-  <section class="section">
-    <img src="your-image4.jpg" alt="おすすめ提案" class="sr-img">
-    <p class="sr-text">診断結果にあわせて、その日のおすすめデリや食材、食べ方のポイントもご提案。「なんとなくの不調」を元気に変えていける、そんな一歩をお届けできたらうれしいです。</p>
+  <!-- セクション3 -->
+  <section class="about-section">
+    <div class="a-row stagger reveal">
+      <div class="a-content">
+        <p>mirepoix Health Labは、<strong>管理栄養学を学ぶ学生</strong>と<strong>フレンチシェフ</strong>が協力し、食と健康をもっと身近に、そして楽しく感じてもらえるよう工夫しています。</p>
+      </div>
+      <div class="a-media">
+        <img src="assets/about/03.jpg" alt="学生とシェフの協働">
+      </div>
+    </div>
   </section>
 
-  <section class="key-message section">
-    <h2 class="sr-text key">知る 選ぶ 作る その全てがあなたの未来を創る</h2>
+  <!-- セクション4 -->
+  <section class="about-section">
+    <div class="a-row stagger reveal">
+      <div class="a-content">
+        <p>診断結果にあわせて、その日のおすすめデリや食材、食べ方のポイントもご提案。</p>
+        <p>「なんとなくの不調」を元気に変えていける、そんな一歩をお届けできたらうれしいです。</p>
+      </div>
+      <div class="a-media">
+        <img src="assets/about/04.jpg" alt="おすすめの食材や食べ方の提案">
+      </div>
+    </div>
   </section>
 
+  <!-- キーメッセージ -->
+  <section class="key-message">
+    <h2 class="key reveal">知る 選ぶ 作る その全てがあなたの未来を創る</h2>
+  </section>
+
+  <!-- フッター：戻る -->
   <footer class="footer">
     <a href="index.html" class="btn primary">トップに戻る</a>
   </footer>
 
+  <!-- スクロール表示：IntersectionObserver（軽量・自前JS） -->
   <script>
-    ScrollReveal().reveal('.sr-img', {
-      origin: 'bottom', distance: '30px', duration: 800, easing: 'ease-out', interval: 200
-    });
-    ScrollReveal().reveal('.sr-text', {
-      origin: 'bottom', distance: '20px', duration: 600, delay: 200, easing: 'ease-out', interval: 200
-    });
-    ScrollReveal().reveal('.key', {
-      scale: 0.8, duration: 1000, delay: 300, easing: 'ease-out'
-    });
+    (function () {
+      const targets = document.querySelectorAll('.reveal, .stagger');
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          const el = entry.target;
+          el.classList.add('show');
+          // スタッガー（子要素を順に表示）
+          if (el.classList.contains('stagger')) {
+            [...el.children].forEach((child, i) => {
+              child.style.transitionDelay = (i * 0.08) + 's';
+              child.classList.add('reveal'); // 念のため個別にも付与
+              // すでに可視なら即時表示
+              requestAnimationFrame(() => child.classList.add('show'));
+            });
+          }
+          io.unobserve(el);
+        });
+      }, { threshold: 0.12, rootMargin: '0px 0px -10% 0px' });
+
+      targets.forEach(t => io.observe(t));
+    })();
   </script>
 </body>
 </html>
